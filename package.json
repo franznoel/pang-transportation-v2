@@ -1,0 +1,22 @@
+{
+  "name": "pang-transportation-v2",
+  "version": "1.0.0",
+  "description": "Transportation app which uses Angularjs and Firebase.",
+  "main": "app/app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fritzdenim/pang-transportation-v2.git"
+  },
+  "keywords": [
+    "transportation"
+  ],
+  "author": "Franz Noel Tanglao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fritzdenim/pang-transportation-v2/issues"
+  },
+  "homepage": "https://github.com/fritzdenim/pang-transportation-v2#readme"
+}
