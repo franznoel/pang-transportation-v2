@@ -13,10 +13,10 @@ gulp.task('copy', function () {
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.js')
-    .pipe(gulp.dest('app/scripts'));
+    .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.css')
-    .pipe(gulp.dest('app/css'));
+    .pipe(gulp.dest('app'));
 
   gulp.src('libs/**/{*.css,*.js}')
     .pipe(gulp.dest('app/libs/'));
