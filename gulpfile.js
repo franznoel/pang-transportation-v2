@@ -18,7 +18,7 @@ gulp.task('copy', function () {
   gulp.src('src/**/*.css')
     .pipe(gulp.dest('app'));
 
-  gulp.src('libs/**/{*.css,*.js}')
+  gulp.src('bower_components/**/{*.css,*.js}')
     .pipe(gulp.dest('app/libs/'));
 });
 
