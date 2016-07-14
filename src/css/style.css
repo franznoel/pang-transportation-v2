@@ -4,3 +4,14 @@
 #transportation-list {
   margin-top:10px;
 }
+.stop-info .panel-body {
+  padding:10px;
+}
+.stop-info h5 {
+  min-height:30px;
+}
+.stop-info .station,
+.stop-info .code {
+  margin:0;
+  padding:0;
+}
