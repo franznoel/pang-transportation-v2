@@ -1,8 +1,9 @@
 (function(document) {
   'use strict';
 
-  var startingFrom = document.querySelector('#startingFrom');
-  var goingTo = document.querySelector('#goingTo');
+  var route = document.querySelector('#route');
+  var departAt = document.querySelector('#departAt');
+  var arriveAt = document.querySelector('#arriveAt');
   var transportation_stops = document.querySelector('.transportation-list');
   var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
 
@@ -36,7 +37,7 @@
   }
 
   /**
-    * creates a stop Info HTML if empty.
+    * creates a stop Info HTML if empty fields on starting From and Going to.
     */
   function getStopsEmptyHtml() {
     var stopHtml = "<div class='alert alert-info'>";
@@ -45,35 +46,79 @@
     return stopHtml;
   }
 
+  /*
+   * A helper that compares if the stop belongs to a route.
+   * @param {string} route - String value of route.
+   * @param {string or number} stop_code - String value of stop_code.
+   */
+  function routeMatched(stop_code) {
+    var stop_code = String(stop_code);
+
+    if (route.value == stop_code.substring(0,3))
+      return true;
+
+    return false;
+  }
+
+  /*
+   * Display stops by route in transportation list
+   * @param {Object} route - DOM object of route.
+  */
+  function displayStopsByRoute() {
+    transportation_stops.innerHTML = '';
+    stopsRef.orderByChild("stop_name").on("value",function(stops) {
+      stops.forEach(function(stopObject) {
+        var stopKey = stopObject.key();
+        var stop = stopObject.val();
+        var stopInfo = null;
+
+        if (route.value) {
+          var route_matched = routeMatched(stop.stop_code);
+          if (route_matched) {
+            stopInfo = getStopsHtml(stop);
+            transportation_stops.appendChild(stopInfo);
+          }
+        }
+      });
+    });
+  }
+
+
   /**
     * Displays the stops depending on the chosen information.
-    * @param {string} text coming from startingFrom and goingTo fields.
+    * @param {string} text coming from departAt and arriveAt fields.
     */
   function displayStops(keyword) {
     transportation_stops.innerHTML = '';
     stopsRef.orderByChild("stop_name").on("value",function(stops) {
       stops.forEach(function(stopObject) {
+        var stopKey = stopObject.key();
         var stop = stopObject.val();
         var stopInfo = null;
 
-        if (keyword) {
+        if (route && keyword) {
           var keyword_matched = (new RegExp(keyword)).test(stop.stop_name);
-          if(keyword_matched) {
+          var route_matched = routeMatched(route.value,stop.stop_code);
+          if(keyword_matched && route_matched) {
             stopInfo = getStopsHtml(stop);
             transportation_stops.appendChild(stopInfo);
           }
-        } 
+        }
       })
     });
   }
 
   /**
     * Displays the transportation list, and passes the keywords if there are any
-    * @param {string} text coming from startingFrom and goingTo fields.
+    * @param {string} text coming from departAt and arriveAt fields.
     */
-  function displayTransportatonList(keyword) {
-    if (keyword) {
+  function displayTransportationList(keyword) {
+    if (route.value && keyword) {
+      // console.log("Display Stops.");
       displayStops(keyword);
+    } else if (route.value) {
+      // console.log("Display Stops by route.");
+      displayStopsByRoute();
     } else {
       var stopsHtml = getStopsEmptyHtml();
       transportation_stops.innerHTML = stopsHtml;
@@ -81,7 +126,7 @@
   }
 
   function getJSON(url) {
-    return fetch(url,{
+    return fetch(url, {
       mode: 'no-cors'
     }).then(function(response) {
       console.log("Received: "+ url);
@@ -90,14 +135,21 @@
   }
 
   /*
-   * Filter stop information on keyup
+   * Set route value on change
    */
-  startingFrom.addEventListener('keyup',function() {
-    displayTransportatonList(this.value);
+  route.addEventListener('change', function() {
+    displayTransportationList(null); 
   });
 
-  goingTo.addEventListener('keyup',function() {
-    displayTransportatonList(this.value);
+  /*
+   * Filter stop information on keyup
+   */
+  departAt.addEventListener('keyup', function() {
+    displayTransportationList(this.value);
+  });
+
+  arriveAt.addEventListener('keyup', function() {
+    displayTransportationList(this.value);
   });
 
 

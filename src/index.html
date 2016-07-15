@@ -23,10 +23,21 @@
         <div class="collapse navbar-collapse" id="transportation">
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" id="startingFrom" name="startingFrom" class="form-control" placeholder="Starting From" required>
+              <select id="route" name="route" class="form-control">
+                <option value="">-- Select a Train Line --</option>
+                <option value="801">Metro Blue Line</option>
+                <option value="802">Metro Red Line</option>
+                <option value="803">Metro Green Line</option>
+                <option value="804">Metro Gold Line</option>
+                <option value="805">Metro Purple Line</option>
+                <option value="806">Metro Expo Line</option>
+              </select>
             </div>
             <div class="form-group">
-              <input type="text" id="goingTo" name="goingTo" class="form-control" placeholder="Going To" required>
+              <input type="text" id="departAt" name="departAt" class="form-control" placeholder="Depart At" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="arriveAt" name="arriveAt" class="form-control" placeholder="Arrive At" required>
             </div>
             <button type="submit" class="btn btn-primary">Get Train Times</button>
           </form>
@@ -38,7 +49,7 @@
         <div class="col-md-12">
           <div class="transportation-list">
             <div class="alert alert-info">
-              <p>Let's start! Choose a <strong>Starting From</strong> and <strong>Going To</strong> location.</p>
+              <p>Let's start! Choose a <strong>Train Line</strong>. Then, Choose a <strong>Depart at</strong> and <strong>Arrive At</strong> location.</p>
             </div>
           </div>
         </div>
