@@ -8,6 +8,7 @@
   var getTimesButton = document.querySelector('#get-times-button');
   var transportation_stops = document.querySelector('.transportation-list');
   var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
+  var stopTimesRef = new Firebase('https://pang-transportation.firebaseio.com/stop_times/');
 
   /**
     * creates a stop Info HTML.
@@ -44,7 +45,6 @@
         arriveAt.focus();
         inputFocus = arriveAt;
       } else if(inputFocus==arriveAt) {
-        console.log('showTimes',getTimesButton);
         getTimesButton.focus();
         getTrainTimes();
       }
@@ -79,6 +79,24 @@
     var stop_code = String(stop_code);
 
     if (route.value == stop_code.substring(0,3))
+      return true;
+
+    return false;
+  }
+
+  function stopDepartMatched(stop_id) {
+    var depart_stop_id = String(departAt.value);
+
+    if (depart_stop_id.substring(0,5) == stop_id)
+      return true;
+
+    return false;
+  }
+
+  function stopArriveMatched(stop_id) {
+    var arrive_stop_id = String(arriveAt.value);
+
+    if (arrive_stop_id.substring(0,5) == stop_id)
       return true;
 
     return false;
@@ -120,9 +138,9 @@
         var stop = stopObject.val();
         var stopInfo = null;
 
-        if (route && keyword) {
+        if (route.value && keyword) {
           var keyword_matched = (new RegExp(keyword)).test(stop.stop_name);
-          var route_matched = routeMatched(route.value,stop.stop_code);
+          var route_matched = routeMatched(stop.stop_code);
           if(keyword_matched && route_matched) {
             stopInfo = getStopsHtml(stop);
             transportation_stops.appendChild(stopInfo);
@@ -154,6 +172,26 @@
   */
   function getTrainTimes() {
     console.log('Get Train Times!');
+    stopTimesRef.orderByChild("arrival_time").on("value",function(stopTimes) {
+      stopTimes.forEach(function(stopTime) {
+        var transit = stopTime.val();
+        var departMatch = stopDepartMatched(transit.stop_id);
+        var arriveMatch = stopArriveMatched(transit.stop_id);
+
+        if (departMatch) {
+          console.log("Depart: ",transit);
+          // TODO: Add table for depart or create HTML function to display the table.
+        }
+
+        if (arriveMatch) {
+          console.log("Arrival: ",transit)
+          // TODO: Add table for arrive or create HTML function to display the table.
+        }
+
+        // TODO: Replace transportation-list content with Depart and Arrival train times.
+      });
+    });
+
   }
 
   function getJSON(url) {
