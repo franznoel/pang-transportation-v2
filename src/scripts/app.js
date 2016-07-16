@@ -4,6 +4,8 @@
   var route = document.querySelector('#route');
   var departAt = document.querySelector('#departAt');
   var arriveAt = document.querySelector('#arriveAt');
+  var inputFocus = null;
+  var getTimesButton = document.querySelector('#get-times-button');
   var transportation_stops = document.querySelector('.transportation-list');
   var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
 
@@ -14,25 +16,46 @@
     var stopInfo = document.createElement('div');
     stopInfo.setAttribute('class','col-lg-3 col-md-4 col-sm-6');
 
-    var stopHtml = '<div class="panel panel-default stop-info">';
-    stopHtml+= '<div class="panel-body">';
-    stopHtml+= '<h5>'+ stop.stop_name +'</h5>';
+    var panel = document.createElement('div');
+    panel.setAttribute('class','panel panel-default stop-info');
 
-    if (stop.parent_station)
-      stopHtml+= '<p class="station"><strong>Parent Station:</strong> '+ stop.parent_station +'</p>';
-    else
-      stopHtml+= '<p class="station"><strong>Parent Station:</strong> None</p>';
+    var panelBody = document.createElement('div');
+    panelBody.setAttribute('class','panel-body');
 
-    if (stop.stop_code)
-      stopHtml+= '<p class="code"><strong>Stop Code:</strong> '+ stop.stop_code +'</p>';
-    else
-      stopHtml+= '<p class="code"><strong>Stop Code:</strong> None</p>';
+    var stopContent = '<h5>' + stop.stop_name + '</h5>';
+    if (stop.parent_station) {
+      stopContent+= '<p class="station"><strong>Parent Station:</strong> ';
+      stopContent+= stop.parent_station
+      stopContent+= '</p>';
+    } else {
+      stopContent+= '<p class="station"><strong>Parent Station:</strong> ';
+      stopContent+= 'None';
+      stopContent+= '</p>';
+    }
+    stopContent+= '<p class="code"><strong>Stop Code:</strong> '+ stop.stop_code +'</p>';
 
-    stopHtml+= '<button type="button" class="btn btn-default btn-xs">Select Stop</button>'
-    stopHtml+= '</div>';
-    stopHtml+= '</div>';
+    var stopButton = document.createElement('button');
+    stopButton.setAttribute('type','button');
+    stopButton.setAttribute('class','btn btn-default btn-xs select-stop');
+    stopButton.innerHTML = 'Select Stop';
+    stopButton.addEventListener('click',function() {
+      inputFocus.value = stop.stop_code;
+      if (inputFocus==departAt) {
+        arriveAt.focus();
+        inputFocus = arriveAt;
+      } else if(inputFocus==arriveAt) {
+        console.log('showTimes',getTimesButton);
+        getTimesButton.focus();
+        getTrainTimes();
+      }
+      // console.log(inputFocus,stop.stop_code);
+    });
 
-    stopInfo.innerHTML = stopHtml;
+    panelBody.innerHTML = stopContent;
+    panelBody.appendChild(stopButton);
+    panel.appendChild(panelBody);
+    stopInfo.appendChild(panel);
+
     return stopInfo;
   }
 
@@ -41,7 +64,8 @@
     */
   function getStopsEmptyHtml() {
     var stopHtml = "<div class='alert alert-info'>";
-    stopHtml += "<p>Choose a <strong>Starting From</strong> and <strong>Going To</strong> location.</p>";
+    stopHtml += "<p>Choose <strong>Departure</strong> ";
+    stopHtml += "and <strong>Arrival</strong> stops.</p>";
     stopHtml += "</div>";
     return stopHtml;
   }
@@ -125,6 +149,13 @@
     }
   }
 
+  /* 
+   * Gets the train times, and validates departsAt and arriveAt
+  */
+  function getTrainTimes() {
+    console.log('Get Train Times!');
+  }
+
   function getJSON(url) {
     return fetch(url, {
       mode: 'no-cors'
@@ -138,18 +169,21 @@
    * Set route value on change
    */
   route.addEventListener('change', function() {
-    displayTransportationList(null); 
+    displayTransportationList(null);
+    departAt.focus();
+    inputFocus = departAt;
   });
 
   /*
    * Filter stop information on keyup
    */
-  departAt.addEventListener('keyup', function() {
-    displayTransportationList(this.value);
-  });
-
-  arriveAt.addEventListener('keyup', function() {
-    displayTransportationList(this.value);
+  departAt.addEventListener('keyup', function() { displayTransportationList(this.value); });
+  arriveAt.addEventListener('keyup', function() { displayTransportationList(this.value); });
+  departAt.addEventListener('click',function() { inputFocus = this; });
+  arriveAt.addEventListener('click',function() { inputFocus = this; });
+  getTimesButton.addEventListener('click',function(e) {
+    e.preventDefault();
+    getTrainTimes();
   });
 
 
