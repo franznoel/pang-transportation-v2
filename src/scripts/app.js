@@ -15,7 +15,7 @@
     */
   function getStopsHtml(stop) {
     var stopInfo = document.createElement('div');
-    stopInfo.setAttribute('class','col-lg-3 col-md-4 col-sm-6');
+    stopInfo.setAttribute('class','col-lg-3 col-md-4 col-sm-6 stop-container');
 
     var panel = document.createElement('div');
     panel.setAttribute('class','panel panel-default stop-info');
@@ -173,23 +173,61 @@
   function getTrainTimes() {
     console.log('Get Train Times!');
     stopTimesRef.orderByChild("arrival_time").on("value",function(stopTimes) {
+      var transitContainer = document.createElement('div');
+      transitContainer.setAttribute('class','row');
+
+      var departColumn = document.createElement('div');
+      var arriveColumn = document.createElement('div');
+      var departListGroup = document.createElement('div');
+      var arriveListGroup = document.createElement('div');
+
+      departColumn.setAttribute('class','col-md-6');
+      arriveColumn.setAttribute('class','col-md-6');
+      departListGroup.setAttribute('class','list-group');
+      arriveListGroup.setAttribute('class','list-group');
+
       stopTimes.forEach(function(stopTime) {
         var transit = stopTime.val();
-        var departMatch = stopDepartMatched(transit.stop_id);
-        var arriveMatch = stopArriveMatched(transit.stop_id);
 
+        var departMatch = stopDepartMatched(transit.stop_id);
         if (departMatch) {
           console.log("Depart: ",transit);
-          // TODO: Add table for depart or create HTML function to display the table.
+          var departHtml = document.createElement('div');
+          departHtml.setAttribute('class','list-group-item');
+          var html = '<h5>' + transit.stop_headsign + ' ';
+          html+= '<small>'+ transit.departure_time +' - '+ transit.arrival_time +'</small>'
+          html+= '</h5>';
+          departHtml.innerHTML = html;
+          departListGroup.appendChild(departHtml);
+          // TODO: Create HTML function to display the depart times.
         }
 
+        var arriveMatch = stopArriveMatched(transit.stop_id);
         if (arriveMatch) {
-          console.log("Arrival: ",transit)
-          // TODO: Add table for arrive or create HTML function to display the table.
+          console.log("Arrival: ",transit);
+          var arriveHtml = document.createElement('div')
+          arriveHtml.setAttribute('class','list-group-item');
+          var html = '<h5>' + transit.stop_headsign + ' ';
+          html+= '<small>'+ transit.departure_time +' - '+ transit.arrival_time +'</small>'
+          html+= '</h5>';
+          arriveListGroup.appendChild(arriveHtml);
+          // TODO: Create HTML function to display the arrival times.
         }
-
-        // TODO: Replace transportation-list content with Depart and Arrival train times.
       });
+
+      // TODO: Replace transportation-list content with Depart and Arrival train times.
+      // var all_stops = document.querySelectorAll('.stop-container');
+      // transportation_stops.removeChild(all_stops);
+      departColumn.appendChild(departListGroup);
+      arriveColumn.appendChild(arriveListGroup);
+      console.log(departColumn);
+      console.log(arriveColumn);
+      transitContainer.appendChild(departColumn);
+      transitContainer.appendChild(arriveColumn);
+      transportation_stops.innerHTML = "";
+      transportation_stops.appendChild(transitContainer);
+
+      // transportation_stops.appendChild();
     });
 
   }
@@ -219,6 +257,8 @@
   arriveAt.addEventListener('keyup', function() { displayTransportationList(this.value); });
   departAt.addEventListener('click',function() { inputFocus = this; });
   arriveAt.addEventListener('click',function() { inputFocus = this; });
+  departAt.addEventListener('focus',function() { inputFocus = this; });
+  arriveAt.addEventListener('focus',function() { inputFocus = this; });
   getTimesButton.addEventListener('click',function(e) {
     e.preventDefault();
     getTrainTimes();
