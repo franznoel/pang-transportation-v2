@@ -125,6 +125,17 @@
     });
   }
 
+  /*
+   * Creates a loader in the Train Times Button.
+   */
+  function loader() {
+    getTimesButton.innerHTML = '<img src="https://storage.googleapis.com/game-usher.appspot.com/reload.gif" style="height:17px;" /> Loading...';
+    getTimesButton.className = 'btn btn-primary disabled';
+    setTimeout(function() {
+      getTimesButton.className = 'btn btn-primary';
+      getTimesButton.innerHTML = 'Get Train Times';
+    },10000);
+  }
 
   /**
     * Displays the stops depending on the chosen information.
@@ -230,7 +241,7 @@
 
       // transportation_stops.appendChild();
     });
-
+    loader();
   }
 
   function getJSON(url) {
