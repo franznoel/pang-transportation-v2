@@ -195,7 +195,7 @@
           var departHtml = document.createElement('div');
           departHtml.setAttribute('class','list-group-item');
           var html = '<h5>' + transit.stop_headsign + ' ';
-          html+= '<small>'+ transit.departure_time +' - '+ transit.arrival_time +'</small>'
+          html+= '<small>'+ transit.departure_time +' - '+ transit.departure_time +'</small>'
           html+= '</h5>';
           departHtml.innerHTML = html;
           departListGroup.appendChild(departHtml);
@@ -208,8 +208,9 @@
           var arriveHtml = document.createElement('div')
           arriveHtml.setAttribute('class','list-group-item');
           var html = '<h5>' + transit.stop_headsign + ' ';
-          html+= '<small>'+ transit.departure_time +' - '+ transit.arrival_time +'</small>'
+          html+= '<small>'+ transit.arrival_time +' - '+ transit.arrival_time +'</small>'
           html+= '</h5>';
+          arriveHtml.innerHTML = html;
           arriveListGroup.appendChild(arriveHtml);
           // TODO: Create HTML function to display the arrival times.
         }
