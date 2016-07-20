@@ -2,20 +2,22 @@ var staticCacheName = 'pang-transportation-static-v1';
 
 self.addEventListener('install',function(event) {
   // console.log(event.request);
-  caches.open(staticCacheName).then(function(cache) {
-    return cache.addAll([
-      '/',
-      'https://storage.googleapis.com/game-usher.appspot.com/reload.gif',
-      'libs/bootstrap/dist/css/bootstrap.css',
-      'css/style.css',
-      'libs/jquery/dist/jquery.min.js',
-      'libs/bootstrap/dist/js/bootstrap.js',
-      'scripts/app.js'
-    ]);
-  });
+  event.waitUntil(
+    caches.open(staticCacheName).then(function(cache) {
+      return cache.addAll([
+        '/',
+        'images/reload.gif',
+        'libs/bootstrap/dist/css/bootstrap.css',
+        'css/style.css',
+        'libs/jquery/dist/jquery.min.js',
+        'libs/bootstrap/dist/js/bootstrap.js',
+        'scripts/app.js'
+      ]);
+    })
+  );
 });
 
-self.addEventListener('activate',function() {
+self.addEventListener('activate',function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
@@ -23,7 +25,7 @@ self.addEventListener('activate',function() {
           return cacheName.startsWith('pang-transportation-') &&
             cacheName != staticCacheName;
         }).map(function(cacheName) {
-          return cache.delete(cacheName);
+          return caches.delete(cacheName);
         })
       );
     })
@@ -31,14 +33,9 @@ self.addEventListener('activate',function() {
 });
 
 self.addEventListener('fetch',function(event) {
-  // console.log(event.request);
   event.respondWith(
     caches.match(event.request).then(function(response) {
-      if (!response) {
-        return fetch(event.request);
-      } else {
-        return response;
-      }
+      return response || fetch(event.request);
     })
-  );
-})
+  )
+});

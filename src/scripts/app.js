@@ -131,7 +131,7 @@
    * Creates a loader in the Train Times Button.
    */
   function loader() {
-    getTimesButton.innerHTML = '<img src="https://storage.googleapis.com/game-usher.appspot.com/reload.gif" style="height:17px;" /> Loading...';
+    getTimesButton.innerHTML = '<img src="images/reload.gif" style="height:17px;" /> Loading...';
     getTimesButton.className = 'btn btn-primary disabled';
     setTimeout(function() {
       getTimesButton.className = 'btn btn-primary';
@@ -199,6 +199,9 @@
       departListGroup.setAttribute('class','list-group');
       arriveListGroup.setAttribute('class','list-group');
 
+      var departTimes = 0;
+      var arrivalTimes = 0;
+
       stopTimes.forEach(function(stopTime) {
         var transit = stopTime.val();
 
@@ -212,6 +215,7 @@
           html+= '</h5>';
           departHtml.innerHTML = html;
           departListGroup.appendChild(departHtml);
+          departTimes++;
           // Create HTML function to display the depart times.
         }
 
@@ -225,6 +229,7 @@
           html+= '</h5>';
           arriveHtml.innerHTML = html;
           arriveListGroup.appendChild(arriveHtml);
+          arrivalTimes++;
           // Create HTML function to display the arrival times.
         }
       });
@@ -234,14 +239,33 @@
       // transportation_stops.removeChild(all_stops);
       departColumn.appendChild(departListGroup);
       arriveColumn.appendChild(arriveListGroup);
-      // console.log(departColumn);
-      // console.log(arriveColumn);
-      transitContainer.appendChild(departColumn);
-      transitContainer.appendChild(arriveColumn);
+
+      // Departure times HTML.
+      if (departTimes > 0) {
+        transitContainer.appendChild(departColumn);
+      } else {
+        var departHtml = document.createElement('div');
+        departHtml.setAttribute('class','alert alert-danger');
+        departHtml.innerHTML = 'There are no departing times.';
+        departListGroup.appendChild(departHtml);
+        departColumn.appendChild(departListGroup);
+        transitContainer.appendChild(departColumn);
+      }
+
+      if (arrivalTimes > 0) {
+        transitContainer.appendChild(arriveColumn);
+      } else {
+        // Arrival times HTML error.
+        var arriveHtml = document.createElement('div');
+        arriveHtml.setAttribute('class','alert alert-danger');
+        arriveHtml.innerHTML = 'There are no arrival times.';
+        arriveListGroup.appendChild(arriveHtml);
+        arriveColumn.appendChild(arriveListGroup);
+        transitContainer.appendChild(arriveColumn);
+      }
+
       transportation_stops.innerHTML = "";
       transportation_stops.appendChild(transitContainer);
-
-      // transportation_stops.appendChild();
     });
     loader();
   }
