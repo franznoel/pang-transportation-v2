@@ -184,7 +184,7 @@
    * Gets the train times, and validates departsAt and arriveAt
   */
   function getTrainTimes() {
-    console.log('Get Train Times!');
+    // console.log('Get Train Times!');
     stopTimesRef.orderByChild("arrival_time").on("value",function(stopTimes) {
       var transitContainer = document.createElement('div');
       transitContainer.setAttribute('class','row');
@@ -204,7 +204,7 @@
 
         var departMatch = stopDepartMatched(transit.stop_id);
         if (departMatch) {
-          console.log("Depart: ",transit);
+          // console.log("Depart: ",transit);
           var departHtml = document.createElement('div');
           departHtml.setAttribute('class','list-group-item');
           var html = '<h5>' + transit.stop_headsign + ' ';
@@ -212,12 +212,12 @@
           html+= '</h5>';
           departHtml.innerHTML = html;
           departListGroup.appendChild(departHtml);
-          // TODO: Create HTML function to display the depart times.
+          // Create HTML function to display the depart times.
         }
 
         var arriveMatch = stopArriveMatched(transit.stop_id);
         if (arriveMatch) {
-          console.log("Arrival: ",transit);
+          // console.log("Arrival: ",transit);
           var arriveHtml = document.createElement('div')
           arriveHtml.setAttribute('class','list-group-item');
           var html = '<h5>' + transit.stop_headsign + ' ';
@@ -225,17 +225,17 @@
           html+= '</h5>';
           arriveHtml.innerHTML = html;
           arriveListGroup.appendChild(arriveHtml);
-          // TODO: Create HTML function to display the arrival times.
+          // Create HTML function to display the arrival times.
         }
       });
 
-      // TODO: Replace transportation-list content with Depart and Arrival train times.
+      // Replace transportation-list content with Depart and Arrival train times.
       // var all_stops = document.querySelectorAll('.stop-container');
       // transportation_stops.removeChild(all_stops);
       departColumn.appendChild(departListGroup);
       arriveColumn.appendChild(arriveListGroup);
-      console.log(departColumn);
-      console.log(arriveColumn);
+      // console.log(departColumn);
+      // console.log(arriveColumn);
       transitContainer.appendChild(departColumn);
       transitContainer.appendChild(arriveColumn);
       transportation_stops.innerHTML = "";
@@ -244,15 +244,6 @@
       // transportation_stops.appendChild();
     });
     loader();
-  }
-
-  function getJSON(url) {
-    return fetch(url, {
-      mode: 'no-cors'
-    }).then(function(response) {
-      console.log("Received: "+ url);
-      console.log(response.json());
-    });
   }
 
   /*
