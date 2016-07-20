@@ -276,5 +276,15 @@
     getTrainTimes();
   });
 
+  /*
+   * Registering the Service Worker
+  */
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('Service Worker registered!');
+    }).catch(function(err) {
+      console.log('Service Worker not working.');
+    });
+  }
 
 })(document);
