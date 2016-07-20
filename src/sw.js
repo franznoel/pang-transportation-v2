@@ -1,5 +1,5 @@
 self.addEventListener('install',function(event) {
-  console.log(event.request);
+  // console.log(event.request);
   caches.open('pang-transportation-static-v1').then(function(cache) {
     return cache.addAll([
       '/',
@@ -13,10 +13,9 @@ self.addEventListener('install',function(event) {
 });
 
 self.addEventListener('fetch',function(event) {
-  console.log(event.request);
+  // console.log(event.request);
   event.respondWith(
     caches.match(event.request).then(function(response) {
-      console.log(response);
       if (!response) {
         return fetch(event.request);
       } else {
