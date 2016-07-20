@@ -9,6 +9,8 @@
   var transportation_stops = document.querySelector('.transportation-list');
   var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
   var stopTimesRef = new Firebase('https://pang-transportation.firebaseio.com/stop_times/');
+  // stopsRef.keepSynced(true);
+  // stopTimesRef.keepSynced(true);
 
   /**
     * creates a stop Info HTML.
