@@ -1,6 +1,9 @@
 # pang-transportation-v2
 Created a new repository for pang-transportation-v2, which will use angularjs.
 
+You may also visit:
+http://pang-transportation.firebaseapp.com
+
 ## Installation
 Dependencies: NodeJS
 Then, check out the project and install the libraries using the following command:
