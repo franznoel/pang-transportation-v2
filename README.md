@@ -1,5 +1,5 @@
 # pang-transportation-v2
-Created a new repository for pang-transportation-v2, which will use angularjs.
+A GTFS demo application where you can get stop times of a train stop.
 
 You may also visit:
 http://pang-transportation.firebaseapp.com
