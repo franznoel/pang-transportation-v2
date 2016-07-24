@@ -1,6 +1,8 @@
 'use strict';
 var gulp = require('gulp');
 var clean = require('gulp-clean');
+var cleanCss = require('gulp-clean-css');
+var minify = require('gulp-minify');
 var browserSync = require('browser-sync').create();
 
 gulp.task('clean',function() {
@@ -13,9 +15,11 @@ gulp.task('copy', function () {
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.js')
+    .pipe(minify())
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.css')
+    .pipe(cleanCss())
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/{*.jpg,*.png,*.gif}')

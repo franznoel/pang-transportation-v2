@@ -7,11 +7,11 @@ self.addEventListener('install',function(event) {
       return cache.addAll([
         '/',
         'images/reload.gif',
-        'libs/bootstrap/dist/css/bootstrap.css',
+        'libs/bootstrap/dist/css/bootstrap.min.css',
         'css/style.css',
         'libs/jquery/dist/jquery.min.js',
-        'libs/bootstrap/dist/js/bootstrap.js',
-        'scripts/app.js'
+        'libs/bootstrap/dist/js/bootstrap.min.js',
+        'scripts/app-min.js'
       ]);
     })
   );
@@ -40,7 +40,7 @@ self.addEventListener('fetch',function(event) {
   )
 });
 
-self.addEventListener('message',function() {
+self.addEventListener('message',function(event) {
   if (event.data.action == 'skipWaiting') {
     self.skipWaiting();
   }

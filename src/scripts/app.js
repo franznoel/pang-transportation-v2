@@ -276,15 +276,22 @@
   /*
    * Informs the user that update is ready.
   */
-  function updateReady() {
+  function updateReady(worker) {
     updateNow.style.display = 'block';
+
     updateNowButton.addEventListener('click',function(e) {
       e.preventDefault();
       worker.postMessage({action: 'skipWaiting'});
+      updateNow.innerHTML = '<p>Cool! Refreshing the page... </p>';
+      setTimeout(function() {
+        updateNow.style.display = 'none';
+        window.location.reload();
+      },3000);
     });
 
     ignoreUpdateButton.addEventListener('click',function(e) {
       e.preventDefault();
+      updateNow.style.display = 'none';
     });
   }
 
@@ -294,7 +301,7 @@
   function trackInstalling(worker) {
     worker.addEventListener('statechange',function() {
       if (worker.state == 'installed') {
-        updateReady();
+        updateReady(worker);
       }
     });
   }
@@ -323,14 +330,6 @@
   });
 
   /*
-   * Update the Service Worker.
-  */
-  ignoreUpdateButton.addEventListener('click',function(e) {
-    e.preventDefault();
-    hideInformationUpdate();
-  });
-
-  /*
    * Registering the Service Worker
   */
   if (navigator.serviceWorker) {
@@ -340,28 +339,32 @@
       if(!navigator.serviceWorker.controller) return;
 
       if (reg.waiting) {
-        updateReady();
+        console.log('waiting');
+        updateReady(reg.waiting);
+        return;
       }
 
       if (reg.installing) {
+        console.log('installing');
         trackInstalling(reg.installing);
         return;
       }
 
-      if (reg.updated) {
-        trackInstalling(reg.installing);
-      }
-
       reg.addEventListener('updatefound', function() {
+        console.log('updatefound');
         trackInstalling(reg.installing);
       });
 
+      var refreshing;
       reg.addEventListener('controllerchange', function() {
+        console.log('controllerchange');
+        if (refreshing) return;
         window.location.reload();
+        refreshing = true;
       });
 
     }).catch(function(err) {
-      console.log('Service Worker not working.');
+      console.log('Service Worker not working. ' + err);
     });
   }
 
