@@ -10,3 +10,5 @@ Install Dependencies: NodeJS
 Then, check out the project and install the libraries using the following command:
 
     npm i && bower i && gulp copy && gulp
+
+Important: Make sure to **delete** or **unregister** the Service Worker in your current client app.
