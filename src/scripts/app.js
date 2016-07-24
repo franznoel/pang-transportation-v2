@@ -4,6 +4,9 @@
   var route = document.querySelector('#route');
   var departAt = document.querySelector('#departAt');
   var arriveAt = document.querySelector('#arriveAt');
+  var updateNow = document.querySelector('.update-now');
+  var updateNowButton = document.querySelector('#update-now-button');
+  var ignoreUpdateButton = document.querySelector('#ignore-update-button');
   var inputFocus = null;
   var getTimesButton = document.querySelector('#get-times-button');
   var transportation_stops = document.querySelector('.transportation-list');
@@ -271,6 +274,32 @@
   }
 
   /*
+   * Informs the user that update is ready.
+  */
+  function updateReady() {
+    updateNow.style.display = 'block';
+    updateNowButton.addEventListener('click',function(e) {
+      e.preventDefault();
+      worker.postMessage({action: 'skipWaiting'});
+    });
+
+    ignoreUpdateButton.addEventListener('click',function(e) {
+      e.preventDefault();
+    });
+  }
+
+  /*
+   * Tracks the installation of the Service Worker.
+  */
+  function trackInstalling(worker) {
+    worker.addEventListener('statechange',function() {
+      if (worker.state == 'installed') {
+        updateReady();
+      }
+    });
+  }
+
+  /*
    * Set route value on change
    */
   route.addEventListener('change', function() {
@@ -294,11 +323,43 @@
   });
 
   /*
+   * Update the Service Worker.
+  */
+  ignoreUpdateButton.addEventListener('click',function(e) {
+    e.preventDefault();
+    hideInformationUpdate();
+  });
+
+  /*
    * Registering the Service Worker
   */
   if (navigator.serviceWorker) {
     navigator.serviceWorker.register('/sw.js').then(function(reg) {
       console.log('Service Worker registered!');
+
+      if(!navigator.serviceWorker.controller) return;
+
+      if (reg.waiting) {
+        updateReady();
+      }
+
+      if (reg.installing) {
+        trackInstalling(reg.installing);
+        return;
+      }
+
+      if (reg.updated) {
+        trackInstalling(reg.installing);
+      }
+
+      reg.addEventListener('updatefound', function() {
+        trackInstalling(reg.installing);
+      });
+
+      reg.addEventListener('controllerchange', function() {
+        window.location.reload();
+      });
+
     }).catch(function(err) {
       console.log('Service Worker not working.');
     });

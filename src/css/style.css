@@ -18,3 +18,23 @@
   margin:0;
   padding:0;
 }
+.update-now {
+    display:none;
+    position:absolute;
+    margin:0 auto;
+    height:30px;
+    width:100%;
+    text-align:center;
+    z-index:9999;
+}
+.update-now p {
+    border:1px solid #afafaf;
+    background-color:#ffcc99;
+    position:relative;
+    text-align:center;
+    margin:0 auto;
+    padding:10px;
+    border-radius:3px;
+    width:auto;
+    display:inline;
+}
