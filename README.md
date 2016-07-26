@@ -1,5 +1,5 @@
 # pang-transportation-v2
-A GTFS demo application where you can get stop times of a train stop.
+A GTFS demo application where you can get stop times of a train stop even when offline.
 
 You may also visit:
 http://pang-transportation.firebaseapp.com
