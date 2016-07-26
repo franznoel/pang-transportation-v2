@@ -12,8 +12,22 @@
   var transportation_stops = document.querySelector('.transportation-list');
   var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
   var stopTimesRef = new Firebase('https://pang-transportation.firebaseio.com/stop_times/');
+
   // stopsRef.keepSynced(true);
   // stopTimesRef.keepSynced(true);
+
+  /*
+   * Get all the stop Ids
+  */
+  function stopIncludes(stop) {
+    stop  = String(stop);
+    stop = stop.substring(0,5);
+    var stopIds = [ "80101", "80107", "80108", "80109", "80112", "80118", "80122", "80136",
+      "80139", "80201", "80209", "80214", "80216", "80301", "80311", "80314", "80401",
+      "80408", "80409", "80427" ];
+
+    return stopIds.includes(stop);
+  }
 
   /**
     * creates a stop Info HTML.
@@ -121,7 +135,8 @@
 
         if (route.value) {
           var route_matched = routeMatched(stop.stop_code);
-          if (route_matched) {
+          var stopId_included = stopIncludes(stop.stop_code);
+          if (route_matched && stopId_included) {
             stopInfo = getStopsHtml(stop);
             transportation_stops.appendChild(stopInfo);
           }
@@ -157,7 +172,10 @@
         if (route.value && keyword) {
           var keyword_matched = (new RegExp(keyword)).test(stop.stop_name);
           var route_matched = routeMatched(stop.stop_code);
-          if(keyword_matched && route_matched) {
+          var stopId_included = stopIncludes(stop.stop_code);
+          console.log(stop.stop_code);
+
+          if(keyword_matched && route_matched && stopId_included) {
             stopInfo = getStopsHtml(stop);
             transportation_stops.appendChild(stopInfo);
           }
