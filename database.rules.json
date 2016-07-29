@@ -1,6 +1,12 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    ".write": true,
+    "stops": {
+      ".indexOn": ["stop_name"]
+    },
+    "stop_times": {
+      ".indexOn": ["arrival_time","departure_time"]
+    }
   }
 }
