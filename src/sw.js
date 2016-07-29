@@ -7,11 +7,8 @@ self.addEventListener('install',function(event) {
       return cache.addAll([
         '/',
         'images/reload.gif',
-        'libs/bootstrap/dist/css/bootstrap.min.css',
-        'css/style.css',
-        'libs/jquery/dist/jquery.min.js',
-        'libs/bootstrap/dist/js/bootstrap.min.js',
-        'scripts/app-min.js'
+        'css/styles.css',
+        'scripts/app.js'
       ]);
     })
   );
