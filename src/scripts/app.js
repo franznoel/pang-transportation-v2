@@ -1,17 +1,17 @@
 (function(document) {
   'use strict';
 
-  var route = document.querySelector('#route');
-  var departAt = document.querySelector('#departAt');
-  var arriveAt = document.querySelector('#arriveAt');
-  var updateNow = document.querySelector('.update-now');
-  var updateNowButton = document.querySelector('#update-now-button');
-  var ignoreUpdateButton = document.querySelector('#ignore-update-button');
-  var inputFocus = null;
-  var getTimesButton = document.querySelector('#get-times-button');
-  var transportation_stops = document.querySelector('.transportation-list');
-  var stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/');
-  var stopTimesRef = new Firebase('https://pang-transportation.firebaseio.com/stop_times/');
+  var route = document.querySelector('#route'),
+  departAt = document.querySelector('#departAt'),
+  arriveAt = document.querySelector('#arriveAt'),
+  updateNow = document.querySelector('.update-now'),
+  updateNowButton = document.querySelector('#update-now-button'),
+  ignoreUpdateButton = document.querySelector('#ignore-update-button'),
+  inputFocus = null,
+  getTimesButton = document.querySelector('#get-times-button'),
+  transportation_stops = document.querySelector('.transportation-list'),
+  stopsRef = new Firebase('https://pang-transportation.firebaseio.com/stops/'),
+  stopTimesRef = new Firebase('https://pang-transportation.firebaseio.com/stop_times/');
 
   // stopsRef.keepSynced(true);
   // stopTimesRef.keepSynced(true);
@@ -129,13 +129,14 @@
     transportation_stops.innerHTML = '';
     stopsRef.orderByChild("stop_name").on("value",function(stops) {
       stops.forEach(function(stopObject) {
-        var stopKey = stopObject.key();
-        var stop = stopObject.val();
-        var stopInfo = null;
+        var stopKey = stopObject.key(),
+          stop = stopObject.val(),
+          stopInfo = null;
 
         if (route.value) {
-          var route_matched = routeMatched(stop.stop_code);
-          var stopId_included = stopIncludes(stop.stop_code);
+          var route_matched = routeMatched(stop.stop_code),
+            stopId_included = stopIncludes(stop.stop_code);
+
           if (route_matched && stopId_included) {
             stopInfo = getStopsHtml(stop);
             transportation_stops.appendChild(stopInfo);
@@ -165,14 +166,14 @@
     transportation_stops.innerHTML = '';
     stopsRef.orderByChild("stop_name").on("value",function(stops) {
       stops.forEach(function(stopObject) {
-        var stopKey = stopObject.key();
-        var stop = stopObject.val();
-        var stopInfo = null;
+        var stopKey = stopObject.key(),
+          stop = stopObject.val(),
+          stopInfo = null;
 
         if (route.value && keyword) {
-          var keyword_matched = (new RegExp(keyword)).test(stop.stop_name);
-          var route_matched = routeMatched(stop.stop_code);
-          var stopId_included = stopIncludes(stop.stop_code);
+          var keyword_matched = (new RegExp(keyword)).test(stop.stop_name),
+            route_matched = routeMatched(stop.stop_code),
+            stopId_included = stopIncludes(stop.stop_code);
           console.log(stop.stop_code);
 
           if(keyword_matched && route_matched && stopId_included) {
@@ -210,18 +211,18 @@
       var transitContainer = document.createElement('div');
       transitContainer.setAttribute('class','row');
 
-      var departColumn = document.createElement('div');
-      var arriveColumn = document.createElement('div');
-      var departListGroup = document.createElement('div');
-      var arriveListGroup = document.createElement('div');
+      var departColumn = document.createElement('div'),
+        arriveColumn = document.createElement('div'),
+        departListGroup = document.createElement('div'),
+        arriveListGroup = document.createElement('div');
 
       departColumn.setAttribute('class','col-md-6');
       arriveColumn.setAttribute('class','col-md-6');
       departListGroup.setAttribute('class','list-group');
       arriveListGroup.setAttribute('class','list-group');
 
-      var departTimes = 0;
-      var arrivalTimes = 0;
+      var departTimes = 0,
+        arrivalTimes = 0;
 
       stopTimes.forEach(function(stopTime) {
         var transit = stopTime.val();

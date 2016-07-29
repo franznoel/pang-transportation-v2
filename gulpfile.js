@@ -1,11 +1,11 @@
 'use strict';
-var gulp = require('gulp');
-var clean = require('gulp-clean');
-var minify = require('gulp-minify');
-var sourcemaps = require('gulp-sourcemaps');
-var cssNano = require('gulp-cssnano');
-var gpConcat = require('gulp-concat');
-var browserSync = require('browser-sync').create();
+var gulp = require('gulp'),
+  clean = require('gulp-clean'),
+  minify = require('gulp-minify'),
+  sourcemaps = require('gulp-sourcemaps'),
+  cssNano = require('gulp-cssnano'),
+  gpConcat = require('gulp-concat'),
+  browserSync = require('browser-sync').create();
 
 gulp.task('clean',function() {
   return gulp.src('app',{read:false})
