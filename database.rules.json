@@ -1,6 +1,9 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    ".write": true,
+    "stop_times": {
+      ".indexOn": ["stop_id"]
+    }
   }
 }
