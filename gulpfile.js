@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var clean = require('gulp-clean');
 var cleanCss = require('gulp-clean-css');
 var minify = require('gulp-minify');
+var sourcemaps = require('gulp-sourcemaps');
 var browserSync = require('browser-sync').create();
 
 gulp.task('clean',function() {
@@ -15,17 +16,23 @@ gulp.task('copy', function () {
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.js')
+    .pipe(sourcemaps.init())
     .pipe(minify())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/*.css')
+    .pipe(sourcemaps.init())
     .pipe(cleanCss())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('app'));
 
   gulp.src('src/**/{*.jpg,*.png,*.gif}')
     .pipe(gulp.dest('app'));
 
   gulp.src('bower_components/**/{*.css,*.js}')
+    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/libs/'));
 });
 
