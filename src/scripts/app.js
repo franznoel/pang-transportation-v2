@@ -202,6 +202,15 @@
     }
   }
 
+  function hasSameStopTime(previousStopTime,stopTime) {
+    if (previousStopTime) {
+      return previousStopTime.arrival_time == stopTime.arrival_time ||
+        previousStopTime.departure_time == stopTime.departure_time;
+    }
+
+    return true;
+  }
+
   /* 
    * Gets the train times, and validates departsAt and arriveAt
   */
@@ -222,18 +231,22 @@
       arriveListGroup.setAttribute('class','list-group');
 
       var departTimes = 0,
-        arrivalTimes = 0;
+        arrivalTimes = 0,
+        previousStopTime = null;
 
-      stopTimes.forEach(function(stopTime) {
-        var transit = stopTime.val();
+      stopTimes.forEach(function(stopTimeSnapshot) {
+        var stopTime = stopTimeSnapshot.val();
 
-        var departMatch = stopDepartMatched(transit.stop_id);
-        if (departMatch) {
-          // console.log("Depart: ",transit);
+        var same_stop_time = hasSameStopTime(previousStopTime,stopTime);
+        previousStopTime = stopTime;
+
+        var departMatch = stopDepartMatched(stopTime.stop_id);
+        if (departMatch && !same_stop_time) {
+          // console.log("Depart: ",stopTime);
           var departHtml = document.createElement('div');
           departHtml.setAttribute('class','list-group-item');
-          var html = '<h5>' + transit.stop_headsign + ' ';
-          html+= '<small>'+ transit.departure_time +' - '+ transit.departure_time +'</small>'
+          var html = '<h5>' + stopTime.stop_headsign + ' ';
+          html+= '<small>'+ stopTime.departure_time + '</small>';
           html+= '</h5>';
           departHtml.innerHTML = html;
           departListGroup.appendChild(departHtml);
@@ -241,13 +254,13 @@
           // Create HTML function to display the depart times.
         }
 
-        var arriveMatch = stopArriveMatched(transit.stop_id);
-        if (arriveMatch) {
-          // console.log("Arrival: ",transit);
+        var arriveMatch = stopArriveMatched(stopTime.stop_id);
+        if (arriveMatch && !same_stop_time) {
+          // console.log("Arrival: ",stopTime);
           var arriveHtml = document.createElement('div')
           arriveHtml.setAttribute('class','list-group-item');
-          var html = '<h5>' + transit.stop_headsign + ' ';
-          html+= '<small>'+ transit.arrival_time +' - '+ transit.arrival_time +'</small>'
+          var html = '<h5>' + stopTime.stop_headsign + ' ';
+          html+= '<small>'+ stopTime.arrival_time +'</small>';
           html+= '</h5>';
           arriveHtml.innerHTML = html;
           arriveListGroup.appendChild(arriveHtml);
