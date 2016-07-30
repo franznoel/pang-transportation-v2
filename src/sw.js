@@ -6,6 +6,7 @@ self.addEventListener('install',function(event) {
     caches.open(staticCacheName).then(function(cache) {
       return cache.addAll([
         '/',
+        'https://cdn.firebase.com/js/client/2.4.2/firebase.js',
         'images/reload.gif',
         'css/styles.css',
         'scripts/app.js'
