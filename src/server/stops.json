@@ -340,7 +340,7 @@
 {"stop_id":"80132S","stop_code":"80132S","stop_name":"Culver City Station","stop_desc":null,"stop_lat":34.027896,"stop_lon":-118.388986,"stop_url":null,"location_type":1,"parent_station":"","tpis_name":""},
 {"stop_id":"80132A","stop_code":"80132A","stop_name":"Culver City Station - East Entrance","stop_desc":null,"stop_lat":34.027837,"stop_lon":-118.388471,"stop_url":null,"location_type":2,"parent_station":"80132S","tpis_name":""},
 {"stop_id":"80132B","stop_code":"80132B","stop_name":"Culver City Station - West Entrance","stop_desc":null,"stop_lat":34.027919,"stop_lon":-118.389314,"stop_url":null,"location_type":2,"parent_station":"80132S","tpis_name":""},
-{"stop_id":"80133","stop_code":"80133","stop_name":"Palms Station","stop_desc":null,"stop_lat":34.029323,"stop_lon":-118.404255,"stop_url": ,"location_type":0,"parent_station":"80133S","tpis_name":"Palms"},
+{"stop_id":"80133","stop_code":"80133","stop_name":"Palms Station","stop_desc":null,"stop_lat":34.029323,"stop_lon":-118.404255,"stop_url": "","location_type":0,"parent_station":"80133S","tpis_name":"Palms"},
 {"stop_id":"80133S","stop_code":"80133S","stop_name":"Palms Station","stop_desc":null,"stop_lat":34.029323,"stop_lon":-118.404255,"stop_url":null,"location_type":1,"parent_station":"","tpis_name":""},
 {"stop_id":"80134","stop_code":"80134","stop_name":"Westwood / Rancho Park Station","stop_desc":null,"stop_lat":34.036816,"stop_lon":-118.424576,"stop_url":null,"location_type":0,"parent_station":"80134S","tpis_name":"Westwood"},
 {"stop_id":"80134S","stop_code":"80134S","stop_name":"Westwood / Rancho Park Station","stop_desc":null,"stop_lat":34.036816,"stop_lon":-118.424576,"stop_url":null,"location_type":1,"parent_station":"","tpis_name":""},
