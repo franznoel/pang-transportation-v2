@@ -19,6 +19,9 @@ gulp.task('copy', function () {
   gulp.src('src/**/{*.jpg,*.png,*.gif}')
     .pipe(gulp.dest('app'));
 
+  gulp.src('src/**/*.json')
+    .pipe(gulp.dest('app'));
+
   gulp.src('src/sw.js')
     .pipe(gulp.dest('app'));
 });
@@ -29,20 +32,16 @@ gulp.task('compress',function() {
       'bower_components/bootstrap/dist/bootstrap.js',
       'src/scripts/app.js'
     ])
-    .pipe(sourcemaps.init())
     .pipe(minify())
     .pipe(gpConcat('app.js'))
-    .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('app/scripts'));
 
   gulp.src([
       'bower_components/bootstrap/dist/css/bootstrap.css',
       'src/css/style.css'
     ])
-    .pipe(sourcemaps.init())
     .pipe(cssNano())
     .pipe(gpConcat('styles.css'))
-    .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('app/css'));
 });
 
