@@ -28,16 +28,17 @@ gulp.task('copy', function () {
 
 gulp.task('compress',function() {
   gulp.src([
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/bootstrap/dist/bootstrap.js',
+      'node_modules/angular/angular.js',
+      'src/scripts/routes.js',
       'src/scripts/app.js'
     ])
-    .pipe(minify())
-    .pipe(gpConcat('app.js'))
+    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/scripts'));
 
   gulp.src([
-      'bower_components/bootstrap/dist/css/bootstrap.css',
+      'node_modules/bootstrap/dist/css/bootstrap.css',
+      'node_modules/bootstrap/dist/css/bootstrap-theme.css',
       'src/css/style.css'
     ])
     .pipe(cssNano())
@@ -51,7 +52,7 @@ gulp.task('default',function() {
   });
 
   gulp.watch('src/**/*.html',['copy']).on('change',browserSync.reload);
-  gulp.watch('src/**/{*.js,*.css}',['compress']).on('change',browserSync.reload);
+  // gulp.watch('src/**/{*.js,*.css}',['compress']).on('change',browserSync.reload);
 
   browserSync.stream({
     reloadDelay:3000
