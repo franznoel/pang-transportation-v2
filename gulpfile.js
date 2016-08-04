@@ -28,7 +28,8 @@ gulp.task('copy', function () {
 
 gulp.task('compress',function() {
   gulp.src([
-      'node_modules/angular/angular.js',
+      'node_modules/bootstrap/dist/bootsrap.js',
+      'node_modules/jquery/dist/jquery.js',
       'src/scripts/routes.js',
       'src/scripts/app.js'
     ])
@@ -52,7 +53,7 @@ gulp.task('default',function() {
   });
 
   gulp.watch('src/**/*.html',['copy']).on('change',browserSync.reload);
-  // gulp.watch('src/**/{*.js,*.css}',['compress']).on('change',browserSync.reload);
+  gulp.watch('src/**/{*.js,*.css}',['compress']).on('change',browserSync.reload);
 
   browserSync.stream({
     reloadDelay:3000
