@@ -28,13 +28,14 @@ gulp.task('copy', function () {
 
 gulp.task('compress',function() {
   gulp.src([
-      'node_modules/bootstrap/dist/bootsrap.js',
       'node_modules/jquery/dist/jquery.js',
+      'node_modules/bootstrap/dist/js/bootsrap.js',
       'src/scripts/routes.js',
       'src/scripts/app.js'
     ])
-    .pipe(sourcemaps.init())
-    .pipe(sourcemaps.write())
+    // .pipe(sourcemaps.init())
+    .pipe(minify())
+    // .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/scripts'));
 
   gulp.src([
