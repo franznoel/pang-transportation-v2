@@ -1,6 +1,4 @@
-var leaveAt = $('#leaveAt'),
-  arriveBy = $('#arriveBy'),
-  updateNow = $('.update-now'),
+var updateNow = $('.update-now'),
   updateNowButton = $('#update-now-button'),
   ignoreUpdateButton = $('#ignore-update-button'),
   getTimesButton = $('#get-times-button'),
@@ -13,20 +11,19 @@ var leaveAt = $('#leaveAt'),
 */
 function getStopTimes() {
   return fetch(stopTimesUrl)
-  .then(function(response) {
-    return response.json();
+  .then(function(stopTimes) {
+    // Return the stop times.
+    return stopTimes.json();
   })
   .then(function(stop_times) {
+    // Get the stops if there is selected stop.
     var selectedStop = $('#selectedStop').val();
     if (!selectedStop) getStops(stop_times);
     return stop_times;
   })
   .then(function(stop_times) {
-    // displayStopTimes(stop_times);
-  })
-  .then(function(stop_times) {
-    displayDeparture(stop_times);
-    // console.log('Stop Times:', stop_times);
+    var selectedStop = $('#selectedStop').val();
+    if (selectedStop) displayStopTimes(stop_times);
   })
   // .catch(function(err) {
   //   console.log(err);
@@ -59,28 +56,6 @@ function getStops(stop_times) {
   });
 }
 
-function displayDeparture(stop_times) {
-  var route = $('#route').val();
-  if (!stop_times) return;
-  var html = '';
-
-  stop_times.forEach(function(stop_time) {
-    var route_matched = routeMatched(stop_time.stop_id);
-    if (route_matched) {
-      html += '<div class="col-lg-3 col-md-4 col-sm-6 stop-container">';
-      html += '<div class="panel panel-default stop-info">';
-      html += '<div class="panel-body">';
-      html += '<h5>' + stop_time.stop_id + '</h5>';
-      html += '<p class="time"><strong>Departure Time: </strong>'+ stop_time.departure_time +'</p>';
-      html += '</div>';
-      html += '</div>';
-      html += '</div>';
-    }
-  });
-
-  $('.transportation-list').html(html);
-}
-
 /*
  * Display the Unique Stops in .transportation-list
 */
@@ -107,7 +82,7 @@ function displayUniqueStops(stops,stop_times) {
       html += '<div class="panel-body">';
       html += '<h5 class="station">' + stop.stop_name + '</h5>';
       html += '<p><strong>Stop ID:</strong> ' + stop.stop_id + '</p>'
-      html += '<button type="button" class="btn btn-default btn-xs select-stop" value="' + stop.stop_id + '">Select Stop</button>';
+      html += '<button type="button" data-stop-name="'+ stop.stop_name +'" class="btn btn-default btn-xs select-stop" value="' + stop.stop_id + '">Select Stop</button>';
       html += '</div>';
       html += '</div>';
       html += '</div>';
@@ -125,21 +100,26 @@ function displayUniqueStops(stops,stop_times) {
 function displayStopTimes(stop_times) {
   var leaveOrArrive = $('#leaveOrArrive').val();
   var html = '';
+  html += '<div class="col-sm-12 col-md-4 col-lg-4">';
+  html += '<table class="table table-bordered">';
+
+  // Title
+  if (leaveOrArrive == 'leave') html += '<tr></th><h3>Leaves At</h3></th></tr>';
+  else if (leaveOrArrive == 'arrive') html += '<tr></th><h3>Arrive</h3></th></tr>';
+
+  // Times
   stop_times.forEach(function(stop_time) {
     var route_matched = routeMatched(stop_time.stop_id);
-    var stop_matched = stopMatchedSelected(stop_time);
-
-    // console.log(stops_matched);
-    html += '<div class="col-sm-6 col-md-4 col-lg-3">';
-    html += '<div class="panel panel-default stop-info">';
-    html += '<div class="panel-body">';
-    html += '<h5 class="station">' + stop_time.stop_name + '</h5>';
-    html += '<p><strong>Stop ID:</strong> ' + stop.stop_id + '</p>'
-    html += '<button type="button" class="btn btn-default btn-xs select-stop" value="' + stop.stop_id + '">Select Stop</button>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
+    if (route_matched) {
+      var the_time = (leaveOrArrive == 'leave') ? stop_time.departure_time : stop_time.arrival_time;
+      html += '<tr><td>';
+      html += the_time + ' <button type="button" class="btn btn-default btn-xs select-time" value="' + the_time + '">Select Time</button>';
+      html += '</td></tr>';
+    }
   });
+
+  html += '</table>';
+  html += '</div>';
 
   $('.transportation-list').html(html);
 }
@@ -185,12 +165,21 @@ function stopMatchedSelected(stop_time) {
     inputFocus = $('#selectedStop');
   });
 
-  // Set stopTimes when .select-stop is clicked
+  // Select Stop
   $(document).on('click','.select-stop',function(e) {
+    var stop_name = $(this).data('stop-name');
     $("#selectedStop").val(this.value);
     $('#selectedTime').focus();
+    $('.transportation-stop').html(stop_name + ' Stop Times');
     inputFocus = $('#selectedTime');
+    // TODO: Get the stopTimes of the selected stop
+
     // console.log('Selected',this.value);
+  });
+
+  // Select time
+  $(document).on('click','.select-time',function(e) {
+    $('#selectedTime').val(this.value);
   });
 
   // Display stop_times list for stops on focus.
