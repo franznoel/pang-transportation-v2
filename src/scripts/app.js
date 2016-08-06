@@ -103,14 +103,14 @@ function displayStopTimes(stops,stop_times) {
   html += '<div class="col-sm-12 col-md-12 col-lg-12">';
   html += '<table class="table table-bordered">';
   html += '<tr>';
-  html += '<th>Arrival Time</th>';
   html += '<th>Departure Time</th>';
+  html += '<th>Arrival Time</th>';
   html += '<th>Duration</th>';
   html += '</tr>';
 
   // Times
   stop_times.forEach(function(stop_time) {
-    var route_matched = routeMatched(stop_time.stop_id);
+    var route_matched = routeMatched(stop_time.stop_id);  
 
 
     if (route_matched) {
