@@ -16,14 +16,17 @@ function getStopTimes() {
     return stopTimes.json();
   })
   .then(function(stop_times) {
-    // Get the stops if there is selected stop.
-    var selectedStop = $('#selectedStop').val();
-    if (!selectedStop) getStops(stop_times);
+    // Get the stops if there is a leaveAt.
+    var leaveAt = $('#leaveAt').val();
+    if (!leaveAt) getStops(stop_times);
     return stop_times;
   })
   .then(function(stop_times) {
-    var selectedStop = $('#selectedStop').val();
-    if (selectedStop) displayStopTimes(stop_times);
+    // Display Stop Times if leaveAt exist.
+    var leaveAt = $('#leaveAt').val();
+    // console.log(stop_times);
+    var stops = getStops(stop_times);
+    if (leaveAt) displayStopTimes(stops,stop_times);
   })
   // .catch(function(err) {
   //   console.log(err);
@@ -35,7 +38,8 @@ function getStopTimes() {
  * @param {Object[]} stop_times list
 */
 function getStops(stop_times) {
-  var selectedStop = $("#selectedStop").val();
+  var leaveAt = $('#leaveAt').val();
+  var arriveAt = $('#arriveAt').val();
 
   return fetch(stopsUrl)
   .then(function(stops) {
@@ -43,13 +47,8 @@ function getStops(stop_times) {
     return stops.json();
   })
   .then(function(stops) {
-    if (!selectedStop)
-      displayUniqueStops(stops,stop_times);
+    if (!leaveAt) displayUniqueStops(stops,stop_times);
     return stops;
-  })
-  .then(function(stops) {
-
-    // console.log('Stops:', stops);
   })
   .catch(function(err) {
     console.log(err);
@@ -97,24 +96,29 @@ function displayUniqueStops(stops,stop_times) {
 /*
  * Display Stop Times in transportation-list
 */
-function displayStopTimes(stop_times) {
+function displayStopTimes(stops,stop_times) {
   var leaveOrArrive = $('#leaveOrArrive').val();
-  var html = '';
-  html += '<div class="col-sm-12 col-md-4 col-lg-4">';
-  html += '<table class="table table-bordered">';
 
-  // Title
-  if (leaveOrArrive == 'leave') html += '<tr></th><h3>Leaves At</h3></th></tr>';
-  else if (leaveOrArrive == 'arrive') html += '<tr></th><h3>Arrive</h3></th></tr>';
+  var html = '';
+  html += '<div class="col-sm-12 col-md-12 col-lg-12">';
+  html += '<table class="table table-bordered">';
+  html += '<tr>';
+  html += '<th>Arrival Time</th>';
+  html += '<th>Departure Time</th>';
+  html += '<th>Duration</th>';
+  html += '</tr>';
 
   // Times
   stop_times.forEach(function(stop_time) {
     var route_matched = routeMatched(stop_time.stop_id);
+
+
     if (route_matched) {
-      var the_time = (leaveOrArrive == 'leave') ? stop_time.departure_time : stop_time.arrival_time;
-      html += '<tr><td>';
-      html += the_time + ' <button type="button" class="btn btn-default btn-xs select-time" value="' + the_time + '">Select Time</button>';
-      html += '</td></tr>';
+      html += '<tr>';
+      html += '<td>' + stop_time.departure_time + '</td>';
+      html += '<td>' + stop_time.arrival_time + '</td>';
+      html += '<td>' + getDuration(stop_time.departure_time,stop_time.arrival_time) + '</td>';
+      html += '</tr>';
     }
   });
 
@@ -124,6 +128,12 @@ function displayStopTimes(stop_times) {
   $('.transportation-list').html(html);
 }
 
+/*
+ * Gets the duration
+*/
+function getDuration(departure_time,arrival_time) {
+  return String("");
+}
 
 /*
  * A helper that compares if the stop belongs to a route.
@@ -150,48 +160,45 @@ function stopMatched(stop,stop_time) {
 */
 function stopMatchedSelected(stop_time) {
   var stop_id = String(stop_time.stop_id);
-  var selectedStop = $('#selectedStop').val();
-  if (selectedStop == stop_time.stop_id) return stop;
+  var leaveAt = $('#leaveAt').val();
+  if (leaveAt == stop_time.stop_id) return stop;
   return null;
 }
+
 
 (function(document) {
   'use strict';
 
-  // Set route value on change
+  // Select Route
   $('#route').on('change', function() {
     getStopTimes();
-    $('#selectedStop').focus();
-    inputFocus = $('#selectedStop');
+    $('#leaveAt').focus();
+    inputFocus = $('#leaveAt');
   });
 
-  // Select Stop
+  // Select Stops
   $(document).on('click','.select-stop',function(e) {
     var stop_name = $(this).data('stop-name');
-    $("#selectedStop").val(this.value);
-    $('#selectedTime').focus();
-    $('.transportation-stop').html(stop_name + ' Stop Times');
-    inputFocus = $('#selectedTime');
-    // TODO: Get the stopTimes of the selected stop
+    var leaveAt = $('#leaveAt').val();
+    var arriveAt = $('#arriveAt').val();
 
-    // console.log('Selected',this.value);
+    if (leaveAt == '') {
+      $('#leaveAt').val(this.value);
+      $('#arriveAt').focus();
+      inputFocus = $('#arriveAt');
+      $('.transportation-stop-start').html('From: ' + stop_name);
+    } else {
+      $('#arriveAt').val(this.value);
+      $('#get-times-button').focus();
+      inputFocus = $('#get-times-button');
+      $('.transportation-stop-end').html('To: ' + stop_name);
+      getStopTimes();
+    }
   });
 
-  // Select time
+  // Select Time
   $(document).on('click','.select-time',function(e) {
     $('#selectedTime').val(this.value);
-  });
-
-  // Display stop_times list for stops on focus.
-  $('#selectedTime').on('focus',function() {
-    getStopTimes();
-  });
-
-  // Set stopTime on selectedStop change.
-  $('#selectedStop').on('change',function() {
-    getStopTimes();
-    $('#selectedTime').focus();
-    inputFocus = $('#selectedTime')
   });
 
   /*

@@ -32,16 +32,10 @@
               </select>
             </div>
             <div class="form-group">
-              <input type="text" id="selectedStop" name="selectedStop" class="form-control" placeholder="Selected Stop" required>
+              <input type="text" id="leaveAt" name="leaveAt" class="form-control" placeholder="Leave At" required>
             </div>
             <div class="form-group">
-              <select id="leaveOrArrive" name="leaveOrArrive" class="form-control" required>
-                <option value="leave">Leave At</option>
-                <option value="arrive">Arrive By</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <input type="text" id="selectedTime" name="selectedTime" class="form-control" placeholder="Time" required>
+              <input type="text" id="arriveAt" name="arriveAt" class="form-control" placeholder="Arrive At" required>
             </div>
             <button id="get-times-button" type="submit" class="btn btn-primary">Get Train Times</button>
           </form>
@@ -58,8 +52,15 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
-          <h3 class="transportation-stop"></h3>
+        <div class="col-md-6">
+          <h3 class="transportation-stop-start"></h3>
+        </div>
+        <div class="col-md-6">
+          <h3 class="transportation-stop-end"></h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
           <div class="transportation-list row">
             <div class="alert alert-info">
               <p>Let's start! Choose a <strong>Train Line</strong>. Then, choose a <strong>Departure</strong> and <strong>Arrival</strong> stops.</p>
