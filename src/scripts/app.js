@@ -3,7 +3,6 @@ var updateNow = $('.update-now'),
   ignoreUpdateButton = $('#ignore-update-button'),
   inputFocus = null,
   stopsUrl = 'http://localhost:3000/server/stops.json',
-  tripsUrl = 'http://localhost:3000/server/trips.json',
   stopTimesUrl = 'http://localhost:3000/server/stop_times.json';
 
 /*
@@ -55,25 +54,18 @@ function getStops(stop_times) {
 }
 
 /*
- * Get the trips
+ * Get the unique trip IDs
  * @param {Object[]} stop_times list
 */
-function getTrips() {
-  return fetch(tripsUrl)
-    .then(function(trips) {
-      return trips.json();
-    })
-    .then(function(trips) {
-      console.log(trips);
-      var tripIds = [];
-      trips.forEach(function(trip) {
-        tripIds.push(trip.trip_id);
-      });
-      return tripIds;
-    })
-    .catch(function(err) {
-      console.log(err);
-    })
+function getUniqueTripIds(stop_times) {
+  var tripIds = [];
+  stop_times.forEach(function(stop_time) {
+    if (!tripIds.includes(stop_time.trip_id))
+      tripIds.push(stop_time.trip_id);
+  });
+  // console.log(tripIds);
+
+  return tripIds;
 }
 
 /*
@@ -127,15 +119,18 @@ function displayStopTimes(stops,stop_times) {
   html += '<th>Duration</th>';
   html += '</tr>';
 
-  // Times List
-  var tripIds = getTrips();
-  console.log(tripIds);
+  // get Unique Trip IDs
+  var tripIds = getUniqueTripIds(stop_times);
 
-  stop_times.forEach(function(stop_time) {
-    if (tripIds.includes(stop_time.trip_id)) {
-      console.log(stop_time);
-    }
-  });
+  // get Unique Stop Times
+  var unique_stop_times = getUniqueStopTimes(stop_times);
+  console.log(unique_stop_times);
+
+  // stop_times.forEach(function(stop_time) {
+  //   if (tripIds.includes(stop_time.trip_id)) {
+  //     console.log(stop_time);
+  //   }
+  // });
 
   //   html += '<tr>';
   //   html += '<td>' + transit.departure_time + '</td>';
@@ -150,7 +145,75 @@ function displayStopTimes(stops,stop_times) {
 }
 
 
+/*
+ * Get Unique Stop Times
+*/
+function getUniqueStopTimes(stop_times) {
+  var uniqueStopTimes = [],
+    leaveAt = $('#leaveAt').val(),
+    arriveAt = $('#arriveAt').val();
 
+  stop_times.forEach(function(stop_time) {
+    var stop_time_exists = null,
+      unique_stop_time_index = null,
+      departure_time = null,
+      arrival_time = null,
+      new_stop_time = null;
+
+    // Checks
+    if (uniqueStopTimes) {
+      uniqueStopTimes.forEach(function(uniqueStopTime) {
+        stop_time_exists = stopTimesExists(uniqueStopTimes,'trip_id',stop_time.trip_id);
+        if (stop_time_exists)
+          unique_stop_time_index = uniqueStopTimes.indexOf(uniqueStopTime);
+      });
+    }
+
+    console.log(stop_times);
+
+    // If the stopId matches with leaveAt and does not exist in uniqueStopTimes, get the departure time
+    if (stop_time.stop_id == leaveAt && stop_time.departure_time !=null)
+      departure_time = stop_time.departure_time;
+
+    // If the stopId matches with arriveAt and does not exist in uniqueStopTimes, get the arrival time
+      if (stop_time.stop_id == arriveAt && stop_time.arriveAt)
+        arrival_time = stop_time.arrival_time;
+
+    var new_stop_time = {
+      "trip_id": stop_time.trip_id,
+      "departure_time": departure_time,
+      "arrival_time": arrival_time
+    }
+
+    if (unique_stop_time_index) {
+      uniqueStopTimes[unique_stop_time_index] = new_stop_time;
+    } else {
+      uniqueStopTimes.push(new_stop_time);
+    }
+
+    uniqueStoptimeIndex = null;
+
+
+    // If stop_time.trip_id exists in uniqueStopTimes
+      // Get the array position for uniqueStopTimes.
+        // If the stopId matches with leaveAt, get the departure time
+        // If the stopId matches with arriveAt, get the arrival time
+    // Else
+      // Add an object to uniqueStopTimes
+        // If the stopId matches with leaveAt, get the departure time
+        // If the stopId matches with arriveAt, get the arrival time
+  });
+
+  return uniqueStopTimes;
+}
+
+
+/*
+ * Checks if stop_times exists.
+*/
+function stopTimesExists(stop_time,key,value) {
+  return stop_time.hasOwnProperty(key) && stop_time[key] === value;
+}
 
 /*
  * Gets the duration
@@ -188,6 +251,7 @@ function stopMatchedSelected(stop_time) {
   if (leaveAt == stop_time.stop_id) return stop;
   return null;
 }
+
 
 
 (function(document) {
