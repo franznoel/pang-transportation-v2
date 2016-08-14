@@ -5,6 +5,10 @@ var gulp = require('gulp'),
   sourcemaps = require('gulp-sourcemaps'),
   cssNano = require('gulp-cssnano'),
   gpConcat = require('gulp-concat'),
+  http = require('http'),
+  url = require('url'),
+  fs = require('fs'),
+  runSequence = require('run-sequence'),
   browserSync = require('browser-sync').create();
 
 gulp.task('clean',function() {
@@ -48,15 +52,30 @@ gulp.task('compress',function() {
     .pipe(gulp.dest('app/css'));
 });
 
-gulp.task('default',function() {
-  browserSync.init({
-    server: "app/"
-  });
+gulp.task('js:serve',function() {
+  http.createServer(function(request,response) {
+    var parsedUrl = url.parse(request.url,true);
+    var query = JSON.stringify(parsedUrl.query);
 
+    response.writeHead(200, {'Content-Type': 'text/json'});
+    response.end(query);
+  }).listen(8081);
+});
+
+gulp.task('watch',function() {
   gulp.watch('src/**/*.html',['copy']).on('change',browserSync.reload);
   gulp.watch('src/**/{*.js,*.css}',['compress']).on('change',browserSync.reload);
+})
 
-  browserSync.stream({
-    reloadDelay:3000
+gulp.task('serve',function() {
+  browserSync.init({
+    server: "app/",
   });
+});
+
+gulp.task('default',function() {
+  runSequence('clean',['copy','compress'],['serve','js:serve','watch']);
+  // browserSync.stream({
+  //   reloadDelay:3000
+  // });
 });
