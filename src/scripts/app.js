@@ -158,45 +158,16 @@ function getUniqueStopTimes(stop_times) {
 
   stop_times.forEach(function(stop_time) {
     var stop_time_exists = null,
-      unique_stop_time_index = null,
       departure_time = null,
       arrival_time = null,
       new_stop_time = null;
 
-    // Get the index of unique stop_times if stop_time_exists.
-    if (uniqueStopTimes) {
-      uniqueStopTimes.forEach(function(uniqueStopTime) {
-        stop_time_exists = stopTimesExists(uniqueStopTimes,'trip_id',stop_time.trip_id);
-        if (stop_time_exists)
-          unique_stop_time_index = uniqueStopTimes.indexOf(uniqueStopTime);
-      });
-    }
+    if (!new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt))
+      new_stop_times[stop_time.trip_id] = [];
 
-    if (stop_time.stop_id == leaveAt) new_stop_times.push(stop_time);
-    if (stop_time.stop_id == arriveAt) new_stop_times.push(stop_time);
+    if (stop_time.stop_id == leaveAt) new_stop_times[stop_time.trip_id].push(stop_time);
+    if (stop_time.stop_id == arriveAt) new_stop_times[stop_time.trip_id].push(stop_time);
 
-    var new_stop_time = {
-      "trip_id": stop_time.trip_id,
-      "departure_time": departure_time,
-      "arrival_time": arrival_time
-    }
-
-    if (unique_stop_time_index) {
-      uniqueStopTimes[unique_stop_time_index] = new_stop_time;
-    } else {
-      uniqueStopTimes.push(new_stop_time);
-    }
-
-    uniqueStoptimeIndex = null;
-
-    // If stop_time.trip_id exists in uniqueStopTimes
-      // Get the array position for uniqueStopTimes.
-        // If the stopId matches with leaveAt, get the departure time
-        // If the stopId matches with arriveAt, get the arrival time
-    // Else
-      // Add an object to uniqueStopTimes
-        // If the stopId matches with leaveAt, get the departure time
-        // If the stopId matches with arriveAt, get the arrival time
   });
 
   console.log(new_stop_times);
