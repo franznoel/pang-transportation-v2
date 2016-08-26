@@ -122,9 +122,11 @@ function displayStopTimes(stops,stop_times) {
   // get Unique Trip IDs
   var tripIds = getUniqueTripIds(stop_times);
 
+  loader();
+
   // get Unique Stop Times
   var unique_stop_times = getUniqueStopTimes(stop_times);
-  console.log(unique_stop_times);
+  // console.log(unique_stop_times);
 
   // stop_times.forEach(function(stop_time) {
   //   if (tripIds.includes(stop_time.trip_id)) {
@@ -151,7 +153,8 @@ function displayStopTimes(stops,stop_times) {
 function getUniqueStopTimes(stop_times) {
   var uniqueStopTimes = [],
     leaveAt = $('#leaveAt').val(),
-    arriveAt = $('#arriveAt').val();
+    arriveAt = $('#arriveAt').val(),
+    new_stop_times = [];
 
   stop_times.forEach(function(stop_time) {
     var stop_time_exists = null,
@@ -160,7 +163,7 @@ function getUniqueStopTimes(stop_times) {
       arrival_time = null,
       new_stop_time = null;
 
-    // Checks
+    // Get the index of unique stop_times if stop_time_exists.
     if (uniqueStopTimes) {
       uniqueStopTimes.forEach(function(uniqueStopTime) {
         stop_time_exists = stopTimesExists(uniqueStopTimes,'trip_id',stop_time.trip_id);
@@ -169,15 +172,8 @@ function getUniqueStopTimes(stop_times) {
       });
     }
 
-    console.log(stop_times);
-
-    // If the stopId matches with leaveAt and does not exist in uniqueStopTimes, get the departure time
-    if (stop_time.stop_id == leaveAt && stop_time.departure_time !=null)
-      departure_time = stop_time.departure_time;
-
-    // If the stopId matches with arriveAt and does not exist in uniqueStopTimes, get the arrival time
-      if (stop_time.stop_id == arriveAt && stop_time.arriveAt)
-        arrival_time = stop_time.arrival_time;
+    if (stop_time.stop_id == leaveAt) new_stop_times.push(stop_time);
+    if (stop_time.stop_id == arriveAt) new_stop_times.push(stop_time);
 
     var new_stop_time = {
       "trip_id": stop_time.trip_id,
@@ -193,7 +189,6 @@ function getUniqueStopTimes(stop_times) {
 
     uniqueStoptimeIndex = null;
 
-
     // If stop_time.trip_id exists in uniqueStopTimes
       // Get the array position for uniqueStopTimes.
         // If the stopId matches with leaveAt, get the departure time
@@ -204,7 +199,9 @@ function getUniqueStopTimes(stop_times) {
         // If the stopId matches with arriveAt, get the arrival time
   });
 
-  return uniqueStopTimes;
+  console.log(new_stop_times);
+
+  return new_stop_times;
 }
 
 
@@ -252,6 +249,9 @@ function stopMatchedSelected(stop_time) {
   return null;
 }
 
+function loader() {
+
+}
 
 
 (function(document) {
