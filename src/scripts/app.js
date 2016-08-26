@@ -114,6 +114,7 @@ function displayStopTimes(stops,stop_times) {
   html += '<div class="col-sm-12 col-md-12 col-lg-12">';
   html += '<table class="table table-bordered">';
   html += '<tr>';
+  html += '<th>Trip ID</th>';
   html += '<th>Departure Time</th>';
   html += '<th>Arrival Time</th>';
   html += '<th>Duration</th>';
@@ -125,21 +126,22 @@ function displayStopTimes(stops,stop_times) {
   loader();
 
   // get Unique Stop Times
-  var unique_stop_times = getUniqueStopTimes(stop_times);
+  var stop_times_data = getUniqueStopTimes(stop_times);
   // console.log(unique_stop_times);
 
-  // stop_times.forEach(function(stop_time) {
-  //   if (tripIds.includes(stop_time.trip_id)) {
-  //     console.log(stop_time);
-  //   }
-  // });
+  stop_times_data.forEach(function(stop_time) {
+    if (stop_time.length > 1) {
+      stop_time.forEach(function(stop_time_info) {
+        html += '<tr>';
+        html += '<td>' + stop_time_info.trip_id + '</td>';
+        html += '<td>' + stop_time_info.departure_time + '</td>';
+        html += '<td>' + stop_time_info.arrival_time + '</td>';
+        html += '<td>' + (stop_time_info.departure_time-stop_time_info.arrival_time) + '</td>';
+        html += '</tr>';
+      });
+    }
+  });
 
-  //   html += '<tr>';
-  //   html += '<td>' + transit.departure_time + '</td>';
-  //   html += '<td>' + transit.arrival_time + '</td>';
-  //   html += '<td>' + transit.duration + '</td>';
-  //   html += '</tr>';
-  // });
   html += '</table>';
   html += '</div>';
 
@@ -162,19 +164,23 @@ function getUniqueStopTimes(stop_times) {
       arrival_time = null,
       new_stop_time = null;
 
-    if (!new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt))
+    // console.log(!new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt));
+    var valid_stop_times = !new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt)
+
+    if (valid_stop_times)
       new_stop_times[stop_time.trip_id] = [];
 
-    if (stop_time.stop_id == leaveAt) new_stop_times[stop_time.trip_id].push(stop_time);
-    if (stop_time.stop_id == arriveAt) new_stop_times[stop_time.trip_id].push(stop_time);
+    if (stop_time.stop_id == leaveAt)
+      new_stop_times[stop_time.trip_id].push(stop_time);
 
+    if (stop_time.stop_id == arriveAt)
+      new_stop_times[stop_time.trip_id].push(stop_time);
   });
 
   console.log(new_stop_times);
 
   return new_stop_times;
 }
-
 
 /*
  * Checks if stop_times exists.
