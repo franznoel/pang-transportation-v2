@@ -139,20 +139,19 @@ function displayStopTimes(stops,stop_times) {
       html += '<td>' + trip_id + '</td>';
 
       if (trip[0].type == 'departure_time') {
-        html += '<td>' + trip[0].stop_id + ' - ' + trip[0].departure_time + '</td>';
+        html += '<td>' + trip[0].departure_time + '</td>';
       } else {
         html += '<td></td>';
       }
 
       if (trip[1].type == 'arrival_time') {
-        html += '<td>' + trip[1].stop_id + ' - ' + trip[1].arrival_time + '</td>';
+        html += '<td>' + trip[1].arrival_time + '</td>';
       } else {
         html += '<td></td>';
       }
 
       html += '<td>' + 'none' + '</td>';
       html += '</tr>';
-      
     }
   }
 
@@ -315,12 +314,12 @@ function loader() {
       $('#leaveAt').val(this.value);
       $('#arriveAt').focus();
       inputFocus = $('#arriveAt');
-      $('.transportation-stop-start').html('From: ' + stop_name);
+      $('.transportation-stop-start').html('From: ' + stop_name + ' (' + leaveAt + ')');
     } else {
       $('#arriveAt').val(this.value);
       $('#get-times-button').focus();
       inputFocus = $('#get-times-button');
-      $('.transportation-stop-end').html('To: ' + stop_name);
+      $('.transportation-stop-end').html('To: ' + stop_name + ' (' + arriveAt + ')');
       getStopTimes();
     }
   });
