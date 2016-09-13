@@ -132,21 +132,20 @@ function displayStopTimes(stops,stop_times) {
 
   console.log(stop_times_data);
 
-  for(trip_id in stop_times) {
-    var trip = stop_times[trip_id];
-    if (trip.length > 0) {
+  for(trip_id in stop_times_data) {
+    var trip = stop_times_data[trip_id];
+    if (trip.length == 2 && trip[0].type == 'departure_time' && trip[1].type == 'arrival_time') {
       html += '<tr>';
       html += '<td>' + trip_id + '</td>';
 
-
       if (trip[0].type == 'departure_time') {
-        html += '<td>' + trip[0].departure_time + '</td>';
+        html += '<td>' + trip[0].stop_id + ' - ' + trip[0].departure_time + '</td>';
       } else {
         html += '<td></td>';
       }
 
-      if (trip[0].type == 'arrival_time') {
-        html += '<td>' + trip[0].arrival_time + '</td>';
+      if (trip[1].type == 'arrival_time') {
+        html += '<td>' + trip[1].stop_id + ' - ' + trip[1].arrival_time + '</td>';
       } else {
         html += '<td></td>';
       }
@@ -155,7 +154,6 @@ function displayStopTimes(stops,stop_times) {
       html += '</tr>';
       
     }
-
   }
 
   // stop_times_data.forEach(function(stop_time) {
@@ -184,7 +182,7 @@ function displayStopTimes(stops,stop_times) {
 
 
 /*
- * Get stops
+ * Get trips
 */
 function getTrips(stop_times) {
   var trips = [],
@@ -195,7 +193,7 @@ function getTrips(stop_times) {
     var stop_time = stop_times[i];
     if (trips[stop_time.trip_id] == null) trips[stop_time.trip_id] = [];
 
-    if (stop_time.stop_id == leaveAt) {
+    if (stop_time.stop_id == arriveAt) {
       trips[stop_time.trip_id].push({
         'stop_id':stop_time.stop_id,
         'type':'arrival_time',
@@ -203,7 +201,7 @@ function getTrips(stop_times) {
       });
     }
 
-    if (stop_time.stop_id == arriveAt) {
+    if (stop_time.stop_id == leaveAt) {
       trips[stop_time.trip_id].push({
         'stop_id':stop_time.stop_id,
         'type':'departure_time',
