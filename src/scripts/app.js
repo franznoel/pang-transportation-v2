@@ -126,26 +126,55 @@ function displayStopTimes(stops,stop_times) {
   loader();
 
   // get Unique Stop Times
-  var stop_times_data = getUniqueStopTimes(stop_times);
+  var stop_times_data = getTrips(stop_times);
+  // var stop_times_data = getUniqueStopTimes(stop_times);
   // console.log(unique_stop_times);
 
-  stop_times_data.forEach(function(stop_time) {
-    if (stop_time.length > 1) {
-      var trip_id = '';
-      stop_time.forEach(function(stop_time_info) {
-        html += '<tr>';
-        html += '<td>' + stop_time_info.trip_id + '</td>';
-        html += '<td>' + stop_time_info.departure_time + '</td>';
-        if (trip_id == stop_time_info.trip_id)
-          html += '<td>' + stop_time_info.arrival_time + '</td>';
-        else
-          html += '<td></td>';
-        html += '<td>' + (stop_time_info.departure_time-stop_time_info.arrival_time) + '</td>';
-        html += '</tr>';
-        trip_id = stop_time_info.trip_id;
-      });
+  console.log(stop_times_data);
+
+  for(trip_id in stop_times) {
+    var trip = stop_times[trip_id];
+    if (trip.length > 0) {
+      html += '<tr>';
+      html += '<td>' + trip_id + '</td>';
+
+
+      if (trip[0].type == 'departure_time') {
+        html += '<td>' + trip[0].departure_time + '</td>';
+      } else {
+        html += '<td></td>';
+      }
+
+      if (trip[0].type == 'arrival_time') {
+        html += '<td>' + trip[0].arrival_time + '</td>';
+      } else {
+        html += '<td></td>';
+      }
+
+      html += '<td>' + 'none' + '</td>';
+      html += '</tr>';
+      
     }
-  });
+
+  }
+
+  // stop_times_data.forEach(function(stop_time) {
+  //   if (stop_time.length > 1) {
+  //     var trip_id = '';
+  //     stop_time.forEach(function(stop_time_info) {
+  //       html += '<tr>';
+  //       html += '<td>' + stop_time_info.trip_id + '</td>';
+  //       html += '<td>' + stop_time_info.departure_time + '</td>';
+  //       if (trip_id == stop_time_info.trip_id)
+  //         html += '<td>' + stop_time_info.arrival_time + '</td>';
+  //       else
+  //         html += '<td></td>';
+  //       html += '<td>' + (stop_time_info.departure_time-stop_time_info.arrival_time) + '</td>';
+  //       html += '</tr>';
+  //       trip_id = stop_time_info.trip_id;
+  //     });
+  //   }
+  // });
 
   html += '</table>';
   html += '</div>';
@@ -153,6 +182,38 @@ function displayStopTimes(stops,stop_times) {
   $('.transportation-list').html(html);
 }
 
+
+/*
+ * Get stops
+*/
+function getTrips(stop_times) {
+  var trips = [],
+    leaveAt = $('#leaveAt').val(),
+    arriveAt = $('#arriveAt').val();
+
+  for(var i=0;i<stop_times.length;i++) {
+    var stop_time = stop_times[i];
+    if (trips[stop_time.trip_id] == null) trips[stop_time.trip_id] = [];
+
+    if (stop_time.stop_id == leaveAt) {
+      trips[stop_time.trip_id].push({
+        'stop_id':stop_time.stop_id,
+        'type':'arrival_time',
+        'arrival_time':stop_time.arrival_time
+      });
+    }
+
+    if (stop_time.stop_id == arriveAt) {
+      trips[stop_time.trip_id].push({
+        'stop_id':stop_time.stop_id,
+        'type':'departure_time',
+        'departure_time':stop_time.departure_time
+      });
+    }
+  }
+
+  return trips;
+}
 
 /*
  * Get Unique Stop Times
@@ -181,8 +242,6 @@ function getUniqueStopTimes(stop_times) {
     if (stop_time.stop_id == arriveAt)
       new_stop_times[stop_time.trip_id].push(stop_time);
   });
-
-  console.log(new_stop_times);
 
   return new_stop_times;
 }
@@ -242,6 +301,8 @@ function loader() {
   // Select Route
   $('#route').on('change', function() {
     getStopTimes();
+    $('#leaveAt').val('');
+    $('#arriveAt').val('');
     $('#leaveAt').focus();
     inputFocus = $('#leaveAt');
   });
