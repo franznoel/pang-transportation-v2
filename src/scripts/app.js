@@ -129,27 +129,31 @@ function displayStopTimes(stops,stop_times) {
   var stop_times_data = getTrips(stop_times);
   // console.log(unique_stop_times);
 
-  console.log(stop_times_data);
+  // console.log(stop_times_data);
 
   for(trip_id in stop_times_data) {
-    var trip = stop_times_data[trip_id];
+    var trip = stop_times_data[trip_id],
+      departure_time = '',
+      arrival_time = '';
     if (trip.length == 2 && trip[0].type == 'departure_time' && trip[1].type == 'arrival_time') {
       html += '<tr>';
       html += '<td>' + trip_id + '</td>';
 
       if (trip[0].type == 'departure_time') {
-        html += '<td>' + trip[0].departure_time + '</td>';
+        departure_time = trip[0].departure_time
+        html += '<td>' + departure_time + '</td>';
       } else {
         html += '<td></td>';
       }
 
       if (trip[1].type == 'arrival_time') {
+        arrival_time = trip[1].arrival_time
         html += '<td>' + trip[1].arrival_time + '</td>';
       } else {
         html += '<td></td>';
       }
 
-      html += '<td>' + 'none' + '</td>';
+      html += '<td>' + getDuration(departure_time,arrival_time) + '</td>';
       html += '</tr>';
     }
   }
@@ -197,7 +201,23 @@ function getTrips(stop_times) {
  * Gets the duration
 */
 function getDuration(departure_time,arrival_time) {
-  return String("");
+  // console.log(departure_time,arrival_time);
+  var time = '',
+    duration = '';
+
+  time = departure_time.split(':');
+  departure_time = time[0] * 21600 + time[1] * 3600 + time[2] * 60;
+  time = arrival_time.split(':');
+  arrival_time = time[0] * 21600 + time[1] * 3600 + time[2] * 60;
+
+  // console.log(departure_time,arrival_time,arrival_time-departure_time);
+  duration = arrival_time - departure_time;
+  // duration = duration < 0 ? duration*-1 : duration;
+
+  var minutes = Math.round(duration/3600),
+    seconds = (duration%3600)/60;
+
+  return minutes + ' minutes and ' + seconds + ' seconds';
 }
 
 /*
