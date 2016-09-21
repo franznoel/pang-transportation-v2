@@ -154,24 +154,6 @@ function displayStopTimes(stops,stop_times) {
     }
   }
 
-  // stop_times_data.forEach(function(stop_time) {
-  //   if (stop_time.length > 1) {
-  //     var trip_id = '';
-  //     stop_time.forEach(function(stop_time_info) {
-  //       html += '<tr>';
-  //       html += '<td>' + stop_time_info.trip_id + '</td>';
-  //       html += '<td>' + stop_time_info.departure_time + '</td>';
-  //       if (trip_id == stop_time_info.trip_id)
-  //         html += '<td>' + stop_time_info.arrival_time + '</td>';
-  //       else
-  //         html += '<td></td>';
-  //       html += '<td>' + (stop_time_info.departure_time-stop_time_info.arrival_time) + '</td>';
-  //       html += '</tr>';
-  //       trip_id = stop_time_info.trip_id;
-  //     });
-  //   }
-  // });
-
   html += '</table>';
   html += '</div>';
 
