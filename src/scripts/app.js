@@ -127,7 +127,6 @@ function displayStopTimes(stops,stop_times) {
 
   // get Unique Stop Times
   var stop_times_data = getTrips(stop_times);
-  // var stop_times_data = getUniqueStopTimes(stop_times);
   // console.log(unique_stop_times);
 
   console.log(stop_times_data);
@@ -210,44 +209,6 @@ function getTrips(stop_times) {
   }
 
   return trips;
-}
-
-/*
- * Get Unique Stop Times
-*/
-function getUniqueStopTimes(stop_times) {
-  var uniqueStopTimes = [],
-    leaveAt = $('#leaveAt').val(),
-    arriveAt = $('#arriveAt').val(),
-    new_stop_times = [];
-
-  stop_times.forEach(function(stop_time) {
-    var stop_time_exists = null,
-      departure_time = null,
-      arrival_time = null,
-      new_stop_time = null;
-
-    // console.log(!new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt));
-    var valid_stop_times = !new_stop_times[stop_time.trip_id] && (stop_time.stop_id == leaveAt || stop_time.stop_id == arriveAt)
-
-    if (valid_stop_times)
-      new_stop_times[stop_time.trip_id] = [];
-
-    if (stop_time.stop_id == leaveAt)
-      new_stop_times[stop_time.trip_id].push(stop_time);
-
-    if (stop_time.stop_id == arriveAt)
-      new_stop_times[stop_time.trip_id].push(stop_time);
-  });
-
-  return new_stop_times;
-}
-
-/*
- * Checks if stop_times exists.
-*/
-function stopTimesExists(stop_time,key,value) {
-  return stop_time.hasOwnProperty(key) && stop_time[key] === value;
 }
 
 /*
