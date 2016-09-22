@@ -34,6 +34,7 @@ gulp.task('compress',function() {
   gulp.src([
       'node_modules/jquery/dist/jquery.js',
       'node_modules/bootstrap/dist/js/bootsrap.js',
+      'node_modules/idb/lib/idb.js',
       'src/scripts/routes.js',
       'src/scripts/app.js'
     ])
