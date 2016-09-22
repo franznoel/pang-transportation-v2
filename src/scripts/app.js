@@ -313,40 +313,40 @@ function loader() {
   /*
    * Registering the Service Worker
   */
-  // if (navigator.serviceWorker) {
-  //   navigator.serviceWorker.register('/sw.js').then(function(reg) {
-  //     console.log('Service Worker registered!');
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('Service Worker registered!');
 
-  //     if(!navigator.serviceWorker.controller) return;
+      if(!navigator.serviceWorker.controller) return;
 
-  //     if (reg.waiting) {
-  //       console.log('waiting');
-  //       updateReady(reg.waiting);
-  //       return;
-  //     }
+      if (reg.waiting) {
+        console.log('waiting');
+        updateReady(reg.waiting);
+        return;
+      }
 
-  //     if (reg.installing) {
-  //       console.log('installing');
-  //       trackInstalling(reg.installing);
-  //       return;
-  //     }
+      if (reg.installing) {
+        console.log('installing');
+        trackInstalling(reg.installing);
+        return;
+      }
 
-  //     reg.addEventListener('updatefound', function() {
-  //       console.log('updatefound');
-  //       trackInstalling(reg.installing);
-  //     });
+      reg.addEventListener('updatefound', function() {
+        console.log('updatefound');
+        trackInstalling(reg.installing);
+      });
 
-  //     var refreshing;
-  //     reg.addEventListener('controllerchange', function() {
-  //       console.log('controllerchange');
-  //       if (refreshing) return;
-  //       window.location.reload();
-  //       refreshing = true;
-  //     });
+      var refreshing;
+      reg.addEventListener('controllerchange', function() {
+        console.log('controllerchange');
+        if (refreshing) return;
+        window.location.reload();
+        refreshing = true;
+      });
 
-  //   }).catch(function(err) {
-  //     console.log('Service Worker not working. ' + err);
-  //   });
-  // }
+    }).catch(function(err) {
+      console.log('Service Worker not working. ' + err);
+    });
+  }
 
 })(document);
