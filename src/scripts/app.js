@@ -217,6 +217,9 @@ function getDuration(departure_time,arrival_time) {
   var minutes = Math.round(duration/3600),
     seconds = (duration%3600)/60;
 
+  minutes = (minutes<0) ? minutes*-1 : minutes;
+  seconds = (seconds<0) ? seconds*-1 : seconds;
+
   return minutes + ' minutes and ' + seconds + ' seconds';
 }
 
