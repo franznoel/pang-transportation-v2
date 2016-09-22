@@ -277,12 +277,12 @@ function loader() {
       $('#leaveAt').val(this.value);
       $('#arriveAt').focus();
       inputFocus = $('#arriveAt');
-      $('.transportation-stop-start').html('From: ' + stop_name + ' (' + leaveAt + ')');
+      $('.transportation-stop-start').html('From: ' + stop_name);
     } else {
       $('#arriveAt').val(this.value);
       $('#get-times-button').focus();
       inputFocus = $('#get-times-button');
-      $('.transportation-stop-end').html('To: ' + stop_name + ' (' + arriveAt + ')');
+      $('.transportation-stop-end').html('To: ' + stop_name);
       getStopTimes();
     }
   });
