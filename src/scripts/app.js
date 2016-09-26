@@ -134,7 +134,8 @@ function displayStopTimes(stops,stop_times) {
   for(trip_id in stop_times_data) {
     var trip = stop_times_data[trip_id],
       departure_time = '',
-      arrival_time = '';
+      arrival_time = '',
+      count = 0;
     if (trip.length == 2 && trip[0].type == 'departure_time' && trip[1].type == 'arrival_time') {
       html += '<tr>';
       html += '<td>' + trip_id + '</td>';
@@ -142,6 +143,7 @@ function displayStopTimes(stops,stop_times) {
       if (trip[0].type == 'departure_time') {
         departure_time = trip[0].departure_time
         html += '<td>' + departure_time + '</td>';
+        count = count + 1;
       } else {
         html += '<td></td>';
       }
@@ -149,6 +151,7 @@ function displayStopTimes(stops,stop_times) {
       if (trip[1].type == 'arrival_time') {
         arrival_time = trip[1].arrival_time
         html += '<td>' + trip[1].arrival_time + '</td>';
+        count = count + 1;
       } else {
         html += '<td></td>';
       }
@@ -156,6 +159,13 @@ function displayStopTimes(stops,stop_times) {
       html += '<td>' + getDuration(departure_time,arrival_time) + '</td>';
       html += '</tr>';
     }
+
+  }
+
+  if (count >= 1) {
+    html += '<tr>';
+    html += '<td colspan=4>There are no stop times for the selection. Try 80101 and 80115.</td>';
+    html += '</tr>';
   }
 
   html += '</table>';

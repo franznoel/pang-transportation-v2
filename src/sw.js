@@ -1,4 +1,4 @@
-var staticCacheName = 'pang-transportation-static-v1';
+var staticCacheName = 'pang-transportation-static-v4';
 
 self.addEventListener('install',function(event) {
   // console.log(event.request);
